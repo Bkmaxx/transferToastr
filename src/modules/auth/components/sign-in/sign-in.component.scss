@@ -1,0 +1,48 @@
+.logIn{
+  width: 200px;
+}
+.form-center{
+  display: flex;
+  justify-content: center;
+}
+.field{
+  text-align: center;
+}
+.border{
+min-width:400px;
+min-height: 500px;
+height: auto;
+width: auto;
+}
+.file{
+  border: solid;
+  border-width: thin;
+  border-color: darkgrey;
+  border-radius: 2px;
+}
+
+.title{
+  font-weight: bold;
+  font-size: 40px;
+}
+.Matched{
+  border-color: green;
+
+}
+.notMatched{
+  border-color: red;
+
+}
+input
+{
+  height: 30px;
+}
+.otp{
+  height: 30px;
+  width: 30px;
+}
+.metaMasklogIn{
+  width: 200px;
+  background-image:linear-gradient(rgb(167, 81, 167),rgb(107, 47, 150),rgb(85, 2, 145),rgb(82, 24, 124),rgb(107, 47, 150),rgb(151, 113, 179),rgb(170, 72, 170));
+  color: white;
+}

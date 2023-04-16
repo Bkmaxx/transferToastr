@@ -1,0 +1,47 @@
+<div class='form-center'>
+  <form class="form" [formGroup]="loginForm" (ngSubmit)="logIn()">
+    <div form-control-row form-center class="border">
+      <br>
+      <div class="form-control-col form-center title">Log In</div>
+      <br>
+      <div class="form-control-col form-center">
+        <span *ngIf="loginForm.invalid&&errorToggle" class="field"
+          style="color: red;">Fields Are Invalid</span>
+      </div>
+      <br>
+      <div class="form-control-col form-center">
+        <input type="text" disabled placeholder="phone" style="width:100px; text-align: center;">
+        <input type="phone"  placeholder="+91xxxxxxxxxx" class="field" formControlName="phone" (input)="numberCheck($event.target)">
+      </div>
+      <div class="form-control-col form-center">
+        <span *ngIf="_loginControls['phone'].invalid && _loginControls['phone'].touched" class="field"
+          style="color: red;">Enter Valid Phone Number !</span>
+      </div>
+      <br>
+      <div *ngIf="otpInputToggle" class="form-control-col form-center">
+        <input *ngIf="otpInputToggle" type="text"  disabled placeholder="OTP" style="width:100px; text-align: center;">
+        <div style="height:30px;width: 260px; text-align: center;">
+          <ng-otp-input *ngIf="otpInputToggle" (onInputChange)="onOtpInput($event)" [config]='otpInputConfig' ></ng-otp-input>
+        </div>
+      </div>
+      <br>
+      <!-- Captcha Render -->
+      <div  id="recaptcha-container" class="justify-center flex" style="text-align: -webkit-center;text-align:-moz-center;"></div>
+      <br>
+      <div class="form-control-col form-center">
+        <button *ngIf="!loginForm.invalid&&otpInputToggle&&otp.length===otpInputConfig?.length" class='btn btn-success logIn' type='submit'>Log In</button>
+        <button *ngIf="!loginForm.invalid &&otpInputToggle&&otp.length!==otpInputConfig?.length" type="button" class='btn btn-success logIn' (click)="errorToggler()" >Log In</button>
+        <button *ngIf="_loginControls['phone'].invalid&&!otpInputToggle" type="button" class='btn btn-success logIn' (click)="errorToggler()" >Send OTP</button>
+        <button *ngIf="!_loginControls['phone'].invalid&&!otpInputToggle" type="button" class='btn btn-success logIn' (click)="sendOtp()" >Send OTP</button>
+      </div>
+      <br>
+      <div style="text-align: center;">Or</div>
+      <br>
+      <div class="form-control-col form-center">
+        <button *ngIf="isMetaMaskPresent" class='btn  metaMasklogIn' type='button' (click)="loginMetamask()" >MetaMask Login</button>
+        <button *ngIf="!isMetaMaskPresent" type="button" class='btn  metaMasklogIn' (click)="createMetamask()" >MetaMask Login</button>
+      </div>
+      </div>
+  </form>
+</div>
+

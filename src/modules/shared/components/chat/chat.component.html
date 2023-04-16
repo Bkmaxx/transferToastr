@@ -1,0 +1,139 @@
+<ng-container *ngIf="!chatId">
+  <app-user-info></app-user-info>
+</ng-container>
+
+<ng-container *ngIf="chatId" >
+  {{chatRoomInfo|json}}
+  <table  style="width: 100%;height: 100%;">
+    <thead style="width: 100%;background-color: rgb(243,243,243);">
+      <header class="msger-header">
+        <div class="msger-header-title" style="align-self: center;">
+           <div class="chat-nav">
+            <img class="msg-img" style="height: 50px; border-radius: 70%;width: 50px;" [src]="chatProfile" (error)="errorImageHandler($event)" >
+          </div>
+        </div>
+        <!-- <div  style="align-self: center;color:black;font-size:30px;">chat room name</div> -->
+        <div  style="align-self: center;color:black;font-size:30px;">{{chatName}}</div>
+        <div class="msger-header-options">
+
+            <button style="background-color: transparent;border: none; padding: 15px;" mat-icon-button [matMenuTriggerFor]="menu" >
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu  #menu="matMenu" class="mat-menu-width">
+            <button *ngIf="switchResponse!=='1'&&chatRoomInfo" mat-menu-item   style="width: 150px;" (click)="switchResponse='1'">
+              <mat-icon>info</mat-icon>
+              <span>info</span>
+            </button>
+            <button *ngIf="switchResponse==='1'&&chatRoomInfo" mat-menu-item  style="width: 150px;" (click)="switchResponse='0'">
+              <mat-icon>clear</mat-icon>
+              <span>close info</span>
+            </button>
+            <button mat-menu-item  style="width: 150px;" (click)="shareProfile()">
+              <mat-icon>share</mat-icon>
+              <span>Share Profile</span>
+            </button>
+            <button mat-menu-item style="width: 150px;" (click)="leaveChat()">
+              <mat-icon>exit_to_app</mat-icon>
+              <span>leave chat</span>
+            </button>
+            <button mat-menu-item style="width: 150px;" (click)="closeChat()">
+              <mat-icon>clear</mat-icon>
+              <span>close</span>
+            </button>
+          </mat-menu>
+        </div>
+      </header>
+
+    </thead>
+    <ng-container [ngSwitch]="switchResponse">
+      <ng-container *ngSwitchCase="'1'">
+        <app-chat-room-info [chatRoomInfo]="chatRoomInfo" [chatId]="chatId" ></app-chat-room-info>
+      </ng-container>
+      <ng-container *ngSwitchCase="'0'">
+        <tbody style="height: 100%;display: block;overflow-y:scroll;width: 100%;" class="msger-chat"  #test [scrollTop]="test.scrollHeight">
+          <section class="msger" style="display: contents;width: 100%;">
+             <ng-container >
+            <ng-container *ngIf="chatId">
+              <main  class="msger-chat" style="height:100%" id='chats'  >
+                <ng-container *ngFor="let message of messages;let index=index">
+                    <div [ngClass]="message?.senderId===senderId?'msg right-msg':'msg left-msg'">
+                      <div class="msg-bubble">
+                        <div class="msg-info">
+                          <div class="msg-info-time">{{message?.date|date}}</div>
+                        </div>
+
+                        <div  class="msg-text" *ngIf="message?.type===0" >
+                         {{message?.message}}
+                        </div>
+                        <div  class="msg-text" *ngIf="message?.type===1">
+                          <img style="width: 200px;height: 200px;" [src]='message?.message' (error)="errorChatImageHandler($event)" alt="Imaage-Content">
+                        </div>
+                        <div  class="msg-text" *ngIf="message?.type===2">
+                          <audio controls [src]='message?.message' alt="Audio-Content"></audio>
+                        </div>
+                        <div  class="msg-text" *ngIf="message?.type===3">
+                          <video style="width: 200px;height: 200px;" controls [src]='message?.message' alt="Video-Content"></video>
+                        </div>
+                        <div  class="msg-text" *ngIf="message?.type===4">
+                          <div style="width: 200px;height: 100px;background-color: lightgray;border-radius: 10px;">
+                          <div style="padding: 5px;">This Type of File Can't Be Shown Here</div>
+                          <div type="button" style="text-align: center;width: 200;height: 50px;" (click)="window.open(message?.message,'_blank')"><mat-icon class="download_icon">cloud_download</mat-icon></div>
+                          </div>
+                        </div>
+                        <div>
+                        <div *ngIf="message?.senderId===senderId" style="float: left;"><mat-icon *ngIf="index>=seenMessages" style="color: rgb(184, 184, 184);">done</mat-icon><mat-icon *ngIf="index<seenMessages" style="color: rgb(5, 83, 226);">done_all</mat-icon></div>
+                        <!-- <div style="float: right;" type="button" (click)="deleteMessage(index)"><mat-icon>delete</mat-icon></div> -->
+                      </div>
+                      </div>
+                    </div>
+                  </ng-container>
+                  <ng-container *ngIf="attachmentFile">
+                    <div style="background-color:transparent;">
+                    <table class="table table-stripped">
+                      <thead>
+                        <th>File Name</th>
+                        <th>File</th>
+                        <th>Action</th>
+                      </thead>
+                      <tr>
+                        <td>{{attachmentFile?.name}}</td>
+                        <td *ngIf="attachmentFile.isImage"><img style="max-width: 200px;max-height: 200px;" [src]="attachmentFileUrl"></td>
+                        <td *ngIf="!attachmentFile.isImage">{{attachmentFile?.type}}</td>
+                        <td type="button" style="color: red;" (click)="attachmentFile=null">X</td>
+                      </tr>
+                      <tr *ngIf="attachmentUploadProgress>0">
+                        <div style="display: flex;flex-direction: row;border-width: thin;border: solid;border-color: rgb(29, 29, 29);">
+                          <div style="background-image: linear-gradient(180deg,lightgreen,rgb(81, 233, 81),rgb(32, 192, 32),rgb(21, 209, 21),rgb(0, 163, 0));" [style.width]="attachmentUploadProgress+'%'">
+                          </div></div></tr>
+                    </table>
+                      </div ></ng-container>
+              </main>
+              </ng-container>
+          </ng-container>
+          </section>
+        </tbody>
+        <tfoot style="height: min-content;" >
+              <ng-container >
+                <div class="msger-inputarea" >
+                  <form (submit)="attachmentFile?attchmentUpload():sendMessage(message,0)" style="display: flex;width:100%;">
+                <input type="file" style="display: none;outline: none; color: transparent;border: none;" #fileUpload  matTooltip="Info about the action"
+                matTooltipPosition="top" (change)="fileAttach($event)" >
+                <button type="button" (click)="fileUpload.click()" style="padding:3px;background-color: rgb(0, 196, 65);margin-right: 10px;" >
+                    <mat-icon style="color: white;padding: 5px;">attach_file</mat-icon>
+                </button>
+                <input type="text" #message class="msger-input" placeholder="Enter your message..." >
+                <button *ngIf="!attachmentFile" type="button" class="msger-send-btn" (click)="sendMessage(message,0)">Send</button>
+                <button *ngIf="attachmentFile" type="button" class="msger-send-btn" (click)="attchmentUpload()">Send</button>
+              </form>
+              </div>
+              </ng-container>
+        </tfoot>
+      </ng-container>
+
+    </ng-container>
+  </table>
+</ng-container>
+
+
+
+

@@ -1,0 +1,104 @@
+<table class="dashboard" style="width: 100%;height: 98%;">
+  <tr style="width: 100%;">
+    <td style="width:30%;background-color: aliceblue;">
+      <table style="width:100%;height: 100%;">
+        <thead style="height: 15%;background-color:#eee;">
+          <div style="display: flex; flex-direction: row;justify-content: center;">
+            <img class="msg-img" style="height: 65px; border-radius: 70%;width: 65px;" [src]="userData?.profile"
+              (error)="errorImageHandler($event)">
+            <div style="width: 60%;text-align: center;padding: 4%;">{{userData?.name||'Anonymous'}}</div>
+            <div style="float: right;text-align: center;padding: 4%;">
+              <button style="background-color: transparent;border: none;" mat-icon-button [matMenuTriggerFor]="menu"
+                aria-label="Example icon-button with a menu">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              <mat-menu #menu="matMenu">
+                <button mat-menu-item disabled>
+                  <mat-icon>dialpad</mat-icon>
+                  <span>Redial</span>
+                </button>
+                <button mat-menu-item disabled>
+                  <mat-icon>voicemail</mat-icon>
+                  <span>Check voice mail</span>
+                </button>
+                <button mat-menu-item (click)="logOut()">
+                  <mat-icon>power_settings_new</mat-icon>
+                  <span>logout</span>
+                </button>
+              </mat-menu>
+            </div>
+          </div>
+          <div style="display: flex; flex-direction: row;justify-content: center;">
+            <div
+              style="justify-content: center;width: 95%;padding: 1%;display: flex;background-color: white; flex-direction: row;border-radius: 50px;border: solid;border-width: thin;overflow: hidden;">
+              <input type="text" (input)="searchUser($event.target)" placeholder="search "
+                style="width: 95%;border: none;padding-left: 4%;outline: none;">
+              <div><mat-icon style="background-color: white;height: 100%;outline: none;">search</mat-icon></div>
+            </div>
+          </div>
+        </thead>
+        <tbody class="list-chat">
+          <tr *ngIf="searchResult&&searchResult.length>0">
+            <td>
+              <div>
+                <div style="text-align: center;width: 100%;">search Result</div>
+                <ng-container *ngFor="let chat of searchResult">
+                  <div type="button" class="chatList-chatButton" [ngClass]="recieverId===chat?.id?'selected':''" (click)="[createChat(chat?.id),chatName=chat?.name||'Private',chatProfile=chat?.profile,recieverId=chat?.id]">
+                    <div style="align-self: center;"><img class="msg-img"
+                        style="height: 50px; border-radius: 70%;width: 50px;" [src]="userData?.id"
+                        (error)="errorImageHandler($event)">
+                    </div>
+                    <div style="align-self: center;margin-right: 5%;overflow: hidden; width: 150px;">{{chat?.name||'Private'}}</div>
+                    <div style="align-self: center;margin-right: 5%; width: 50%; overflow: hidden; width: 150px;">{{chat?.id}}</div>
+                  </div>
+                </ng-container>
+              </div>
+
+            </td>
+          </tr>
+          <tr *ngIf="!searchResult||searchResult.length<1">
+            <td>
+              <div>
+                <div style="text-align: center;width: 100%;">Chats</div>
+                <ng-container *ngFor="let chat of chatsList" >
+                  <div type="button" class="chatList-chatButton" [ngClass]="recieverId===chat?.reciever?'selected':''" (click)="[createChat(chat?.reciever),chatName=chat?.name||'Private',chatProfile=chat?.profile,recieverId=chat?.reciever]">
+                    <div style="align-self: center;"><img class="msg-img"
+                        style="height: 50px; border-radius: 70%;width: 50px;" [src]="chat?.profile"
+                        (error)="errorImageHandler($event)">
+                    </div>
+                    <div style="align-self: center;margin-right: 5%;width: 150px;">{{chat?.name||' Private'}}</div>
+                    <div style="align-self: center;margin-right: 5%;width: 150px; overflow: hidden;">{{chat?.reciever}}</div>
+                  </div>
+                </ng-container>
+              </div>
+
+            </td>
+          </tr>
+        </tbody>
+        <tfoot style="height: 50px;">
+          <div type="button" mat-button #addmenu="matMenuTrigger" (mouseover)="addmenu.openMenu()"
+            [matMenuTriggerFor]="aboveMenu" class="add-icon-custom">
+            <mat-icon [ngClass]="addmenu.menuOpen?'add-icon-rotate':'add-icon'">add</mat-icon>
+            <mat-menu #aboveMenu="matMenu" yPosition="above">
+              <div (mouseleave)="addmenu.closeMenu()">
+                <button mat-menu-item (click)="createGroup()"><mat-icon> textsms</mat-icon> Create Group</button>
+                <button mat-menu-item disabled>Future Option</button>
+              </div>
+            </mat-menu>
+          </div>
+        </tfoot>
+      </table>
+
+    </td>
+
+    <td >
+      <ng-container [ngSwitch]="switchReponse">
+        <app-user-info  *ngSwitchCase="'2'"></app-user-info>
+        <app-create-group-chat *ngSwitchCase="'1'"></app-create-group-chat>
+        <app-chat *ngSwitchCase="'0'" [chatId]="chatId" [chatName]="chatName" [chatProfile]="chatProfile" [recieverId]="recieverId" style="display: block; height: 98%;"></app-chat>
+      </ng-container>
+    </td>
+    <!-- <td style="width: 70%;background-image: url({{urls.chatsBackground}});"><app-chat-room-info style="display: block;"></app-chat-room-info></td> -->
+  </tr>
+
+</table>

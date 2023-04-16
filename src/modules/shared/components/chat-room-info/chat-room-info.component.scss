@@ -1,0 +1,23 @@
+.center{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+.field-label{
+  width: 100px;
+  text-align: center;
+}
+.field-input{
+  width: 250px;
+  text-align: center;
+}
+.search-div{
+  justify-content: center;
+  width:350px;
+  display: flex;
+  flex-direction: row;
+  border: solid;
+  border-color: grey;
+  border-width: thin;
+  overflow: hidden;
+}

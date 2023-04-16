@@ -1,0 +1,42 @@
+
+.msger-chat {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px;
+}
+.msger-chat::-webkit-scrollbar {
+  width: 6px;
+}
+.msger-chat::-webkit-scrollbar-track {
+  background: #ddd;
+}
+.msger-chat::-webkit-scrollbar-thumb {
+  background: #bdbdbd;
+}
+.form-center{
+  display: flex;
+  justify-content: center;
+}
+.field{
+  text-align: center;
+}
+.border{
+min-width:400px;
+min-height: 500px;
+height: auto;
+width: auto;
+background-color: aliceblue;
+}
+.file{
+  border: solid;
+  border-width: thin;
+  border-color: rgb(252, 216, 216);
+  border-radius: 2px;
+}
+input[type="file"]::-webkit-file-upload-button{
+  background-color: transparent;
+  border-width: thin;
+  /* width:70px; */
+  /* color: transparent; */
+}
+
